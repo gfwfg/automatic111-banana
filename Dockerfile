@@ -12,29 +12,28 @@ ENV HF_TOKEN=${HF_TOKEN}
 
 RUN apt update && apt-get -y install git wget \
     python3.10 python3.10-venv python3-pip \
-    build-essential libgl-dev libglib2.0-0 vim
+    build-essential libgl-dev libglib2.0-0 wget
 RUN ln -s /usr/bin/python3.10 /usr/bin/python
 
 RUN useradd -ms /bin/bash banana
 WORKDIR /app
-
 # Stable Diffusioni Webui
 RUN git clone https://github.com/AUTOMATIC1111/stable-diffusion-webui.git && \
     cd stable-diffusion-webui && \
-    git checkout baf6946e06249c5af9851c60171692c44ef633e0
+    git checkout baf6946e06249c5af9851c60171692c44ef633e0 &&\
+    cd models/Stable-diffusion/ && \
+    wget ${MODEL_URL}
 
 # Controlnet
 WORKDIR /app/stable-diffusion-webui/extensions
 RUN git clone https://github.com/Mikubill/sd-webui-controlnet.git && \
     cd sd-webui-controlnet && \
-    git checkout 99408b9f4e514efdf33b19f3215ab661b989e209
+    git checkout 99408b9f4e514efdf33b19f3215ab661b989e209 &&\
+    cd models &&\
+    wget ${CONTROL_URL} \
 
 WORKDIR /app/stable-diffusion-webui
-
 RUN pip install tqdm requests
-ADD download_checkpoint.py .
-RUN python download_checkpoint.py
-
 ADD prepare.py .
 RUN python prepare.py --skip-torch-cuda-test --xformers --reinstall-torch --reinstall-xformers
 
