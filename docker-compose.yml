@@ -1,0 +1,8 @@
+version: "3"
+services:
+  stable-diffusion:
+    build:
+      dockerfile: ./Dockerfile
+      context: .
+    ports:
+      - "9000:8000"

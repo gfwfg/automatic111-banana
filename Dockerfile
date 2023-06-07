@@ -1,11 +1,14 @@
 FROM nvidia/cuda:11.7.1-runtime-ubuntu22.04
   
 # To use a different model, change the model URL below:
-ARG MODEL_URL='https://huggingface.co/stabilityai/stable-diffusion-2-1/blob/main/v2-1_768-ema-pruned.ckpt'
-
+ARG MODEL_URL='https://firebasestorage.googleapis.com/v0/b/new-test-project-b425d.appspot.com/o/asserts%2Fmeinamix_meinaV10.safetensors?alt=media'
+ARG CONTROL_URL='https://firebasestorage.googleapis.com/v0/b/new-test-project-b425d.appspot.com/o/asserts%2Fcontrol_v11p_sd15_lineart.pth?alt=media'
 # If you are using a private Huggingface model (sign in required to download) insert your Huggingface
 # access token (https://huggingface.co/settings/tokens) below:
 ARG HF_TOKEN=''
+ENV MODEL_URL=${MODEL_URL}
+ENV CONTROL_URL=${CONTROL_URL}
+ENV HF_TOKEN=${HF_TOKEN}
 
 RUN apt update && apt-get -y install git wget \
     python3.10 python3.10-venv python3-pip \
@@ -15,13 +18,18 @@ RUN ln -s /usr/bin/python3.10 /usr/bin/python
 RUN useradd -ms /bin/bash banana
 WORKDIR /app
 
+# Stable Diffusioni Webui
 RUN git clone https://github.com/AUTOMATIC1111/stable-diffusion-webui.git && \
     cd stable-diffusion-webui && \
-    git checkout 3e0f9a75438fa815429b5530261bcf7d80f3f101
-WORKDIR /app/stable-diffusion-webui
+    git checkout baf6946e06249c5af9851c60171692c44ef633e0
 
-ENV MODEL_URL=${MODEL_URL}
-ENV HF_TOKEN=${HF_TOKEN}
+# Controlnet
+WORKDIR /app/stable-diffusion-webui/extensions
+RUN git clone https://github.com/Mikubill/sd-webui-controlnet.git && \
+    cd sd-webui-controlnet && \
+    git checkout 99408b9f4e514efdf33b19f3215ab661b989e209
+
+WORKDIR /app/stable-diffusion-webui
 
 RUN pip install tqdm requests
 ADD download_checkpoint.py .
