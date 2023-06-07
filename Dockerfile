@@ -3,6 +3,8 @@ FROM nvidia/cuda:11.7.1-runtime-ubuntu22.04
 RUN sed -i s/archive.ubuntu.com/mirrors.aliyun.com/g /etc/apt/sources.list
 RUN sed -i s/security.ubuntu.com/mirrors.aliyun.com/g /etc/apt/sources.list
 RUN sed -i s/ports.ubuntu.com/mirrors.aliyun.com/g /etc/apt/sources.list
+ENV http_proxy="127.0.0.1:7890"
+ENV https_proxy="127.0.0.1:7890"
 # To use a different model, change the model URL below:
 ARG MODEL_URL='https://firebasestorage.googleapis.com/v0/b/new-test-project-b425d.appspot.com/o/asserts%2Fmeinamix_meinaV10.safetensors?alt=media'
 ARG CONTROL_URL='https://firebasestorage.googleapis.com/v0/b/new-test-project-b425d.appspot.com/o/asserts%2Fcontrol_v11p_sd15_lineart.pth?alt=media'
