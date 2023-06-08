@@ -38,12 +38,10 @@ WORKDIR /app/stable-diffusion-webui
 RUN pip install tqdm requests
 ADD prepare.py .
 RUN python prepare.py --skip-torch-cuda-test --xformers
-# ADD download.py download.py
-# RUN python download.py --use-cpu=all
 
 RUN mkdir -p extensions/banana/scripts
 ADD script.py extensions/banana/scripts/banana.py
 ADD app.py app.py
 ADD server.py server.py
 
-# CMD ["python", "server.py", "--xformers", "--disable-safe-unpickle", "--lowram", "--no-hashing", "--listen", "--port", "8000"]
+ CMD ["python", "server.py","--ckpt", "meinamix_meinaV10", "--xformers", "--disable-safe-unpickle", "--lowram", "--no-hashing", "--listen", "--port", "8000"]
