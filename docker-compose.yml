@@ -4,5 +4,17 @@ services:
     build:
       dockerfile: ./Dockerfile
       context: .
+    runtime: nvidia
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+    working_dir: /app/stable-diffusion-webui
     ports:
       - "9000:8000"
+    command: bash -c "python server.py --ckpt meinamix_meinaV10 --xformers --disable-safe-unpickle --lowram --no-hashing --listen --port 8000"
+    deploy:
+      resources:
+        reservations:
+          devices:
+          - driver: nvidia
+            count: 1
+            capabilities: [gpu]
