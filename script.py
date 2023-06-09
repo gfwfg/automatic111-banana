@@ -75,8 +75,7 @@ def healthcheck():
 
 async def inference(request: Request):
     body = await request.body()
-    model_input = json.loads(body)
-    params = model_input['params']
+    params = json.loads(body)
     prompt = params['prompt']
     neg_prompt = params['neg_prompt']
     b64img = params['image']
